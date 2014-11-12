@@ -34,6 +34,7 @@ class ValueIterationAgent(ValueEstimationAgent):
     self.mdp = mdp
     self.discount = discount
     self.iterations = iterations
+    self.currValues = utl.Counter()
     self.values = util.Counter() # value of each state; a Counter is a dict with default 0
     self.Q = util.Counter()
      
@@ -46,11 +47,12 @@ class ValueIterationAgent(ValueEstimationAgent):
             transitionStatesAndProbs = self.mdp.getTransitionStatesAndProbs(s,action)
             tSum = 0
             for (nextState, T) in transitionStatesAndProbs:
-              tSum += T*self.values[(i,s)]
-            self.Q[(s,action)] = self.mdp.getReward(s, action, (0,0)) + tSum
+              tSum += T*self.currValues[(i-1,s)]
+            self.Q[(s,action)] = self.mdp.getReward(s, action, (0,0)) + self.discount*tSum
           optPolicy = self.getPolicy(s)
           print 'opt = ',optPolicy
-          self.values[(i,s)] = self.getQValue(s, optPolicy)
+          self.currValues[(i,s)] = self.Q[(s, optPolicy)]
+          self.values = self.currValues
         else:
           continue 
 
@@ -108,7 +110,7 @@ class ValueIterationAgent(ValueEstimationAgent):
     maxQ = -1000
     optA = None
     for a in actions:
-      if self.getQValue(state, a) > maxQ:
+      if self.Q[(state, a)] > maxQ:
         maxQ = self.getQValue(state, a)
         optA = a
     return optA
