@@ -36,15 +36,21 @@ class ValueIterationAgent(ValueEstimationAgent):
     self.iterations = iterations
     self.values = util.Counter() # value of each state; a Counter is a dict with default 0
      
-    "*** YOUR CODE HERE ***"
+    for i in xrange(self.iterations):
+      states = mdp.getStates()
+      for s in states:
+        actions = mdp.getPossibleActions(s)
+
+        for a in actions:
+          transitionStatesAndProbs = mdp.getTransitionStatesAndProbs(s,a)
+          
         
              
   def getValue(self, state):
     """
       Return the value of the state (computed in __init__).
     """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    return self.value(state)
 
 
   def getQValue(self, state, action):
