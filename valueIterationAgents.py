@@ -72,7 +72,6 @@ class ValueIterationAgent(ValueEstimationAgent):
       terminal state, you should return None.
     """
     actions = self.mdp.getPossibleActions(state)
-    maxQ = -1000
     # Return None for terminal states
     if self.mdp.isTerminal(state):
       return None
